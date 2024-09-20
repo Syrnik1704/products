@@ -24,7 +24,6 @@ public class Product {
     private String name;
     private String mainDescription;
     private String htmlDescription;
-    private long categoryId;
     private float price;
     private String[] imageUrls;
     private String parameters;

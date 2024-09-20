@@ -8,7 +8,7 @@
         <sqlFile path="createCategoriesTable.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-    <changeSet id="11" author="author">
+    <changeSet id="12" author="author">
         <sqlFile path="createProductsTable.sql" relativeToChangelogFile="true"/>
     </changeSet>
 

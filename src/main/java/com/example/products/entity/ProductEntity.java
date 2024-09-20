@@ -17,11 +17,11 @@ import java.time.LocalDate;
 @Builder
 public class ProductEntity extends Product {
     @ManyToOne
-    @JoinColumn(name = "categories")
+    @JoinColumn(name = "category")
     private Category category;
 
-    public ProductEntity(long id, String uid, boolean active, String name, String mainDescription, String htmlDescription, long categoryId, float price, String[] imageUrls, String parameters, LocalDate createdAt, Category category) {
-        super(id, uid, active, name, mainDescription, htmlDescription, categoryId, price, imageUrls, parameters, createdAt);
+    public ProductEntity(long id, String uid, boolean active, String name, String mainDescription, String htmlDescription, float price, String[] imageUrls, String parameters, LocalDate createdAt, Category category) {
+        super(id, uid, active, name, mainDescription, htmlDescription, price, imageUrls, parameters, createdAt);
         this.category = category;
     }
 }

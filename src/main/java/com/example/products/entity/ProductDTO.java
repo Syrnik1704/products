@@ -1,5 +1,5 @@
 package com.example.products.entity;
 
 public class ProductDTO extends Product {
-    private long categoryId;
+    private long categoryShortId;
 }

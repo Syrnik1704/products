@@ -33,4 +33,9 @@ public class ProductController {
     public ResponseEntity<Response> save(@RequestBody ProductFormDTO productFormDTO) {
         return productMediator.saveProduct(productFormDTO);
     }
+
+    @RequestMapping(method = RequestMethod.DELETE)
+    public ResponseEntity<Response> delete(@RequestParam String uid) {
+        return productMediator.deleteProduct(uid);
+    }
 }

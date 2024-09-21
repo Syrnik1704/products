@@ -59,4 +59,13 @@ public class ProductMediator {
             return ResponseEntity.status(400).body(new Response("Something went wrong. Product not created, this category don't exist"));
         }
     }
+
+    public ResponseEntity<Response> deleteProduct(String uid) {
+        try {
+            productService.deleteProduct(uid);
+            return ResponseEntity.ok(new Response("Product deleted successfully"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body(new Response("Something went wrong. Product not deleted"));
+        }
+    }
 }

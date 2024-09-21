@@ -5,10 +5,7 @@ import com.example.products.repository.CategoryRepository;
 import com.example.products.repository.ProductRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -49,7 +46,9 @@ public class ProductService {
                                            Float price_max,
                                            String creation_date,
                                            int page,
-                                           int limit){
+                                           int limit,
+                                           String sort,
+                                           String order) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<ProductEntity> query = criteriaBuilder.createQuery(ProductEntity.class);
         Root<ProductEntity> root = query.from(ProductEntity.class);
@@ -63,6 +62,22 @@ public class ProductService {
         if (page <= 0) page = 1;
 
         List<Predicate> predicates = prepareQuery(name, category, price_min, price_max, criteriaBuilder, root);
+
+        if (!order.isEmpty() && !sort.isEmpty()) {
+            String column = switch (sort) {
+                case "name" -> "name";
+                case "category" -> "category";
+                case "creation_date" -> "created_at";
+                default -> "price";
+            };
+            Order orderQuery;
+            if (order.equals("desc")) {
+                orderQuery = criteriaBuilder.desc(root.get(column));
+            } else {
+                orderQuery = criteriaBuilder.asc(root.get(column));
+            }
+            query.orderBy(orderQuery);
+        }
         query.where(predicates.toArray(new Predicate[0]));
 
         return entityManager.createQuery(query).setFirstResult((page - 1) * limit).setMaxResults(limit).getResultList();

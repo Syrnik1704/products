@@ -8,6 +8,7 @@ import com.example.products.mappers.ProductFormToProductEntityMapper;
 import com.example.products.services.CategoryService;
 import com.example.products.services.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -24,26 +25,33 @@ public class ProductMediator {
     private final ProductEntityToSimpleProductMapper productEntityToSimpleProductMapper;
     private final ProductEntityToProductDTOMapper productEntityToProductDTOMapper;
     private final ProductFormToProductEntityMapper productFormToProductEntityMapper;
+    @Value("${file-service.url}")
+    private String FILE_SERVICE;
 
     public ResponseEntity<?> getProducts(int page, int limit, String name, String category, Float price_min,
                                          Float price_max, String creation_date, String sort, String order) {
-
-        List<ProductEntity> product = productService.getProducts(name, category, price_min, price_max,
-                creation_date, page, limit, sort, order);
-
         if (name != null && !name.isEmpty()) {
             name = URLDecoder.decode(name, StandardCharsets.UTF_8);
         }
 
+        List<ProductEntity> products = productService.getProducts(name, category, price_min, price_max,
+                creation_date, page, limit, sort, order);
+
+        products.forEach(value -> {
+            for (int i = 0; i < value.getImageUrls().length; i++) {
+                value.getImageUrls()[i] = FILE_SERVICE + "?uid=" + value.getImageUrls()[i];
+            }
+        });
+
         if (name == null || name.isEmpty() || creation_date == null || creation_date.isEmpty()){
             List<SimpleProductDTO> simpleProductDTOS = new ArrayList<>();
             long totalCount  = productService.countActiveProducts( name, category, price_min, price_max);
-            product.forEach(value -> {
+            products.forEach(value -> {
                 simpleProductDTOS.add(productEntityToSimpleProductMapper.mapToSimpleProduct(value));
             });
             return ResponseEntity.ok().header("X-Total-Count", String.valueOf(totalCount)).body(simpleProductDTOS);
         }
-        ProductDTO productDTO = productEntityToProductDTOMapper.mapToProductDTO(product.get(0));
+        ProductDTO productDTO = productEntityToProductDTOMapper.mapToProductDTO(products.get(0));
         return ResponseEntity.ok().body(productDTO);
     }
 

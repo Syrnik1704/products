@@ -161,7 +161,7 @@ public class ProductService {
 
     private void deleteImages(String uuid){
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.delete(FILE_SERVICE+"?uuid="+uuid);
+        restTemplate.delete(FILE_SERVICE + "?uuid=" + uuid);
     }
 
 }

@@ -1,6 +1,5 @@
 package com.example.products.services;
 
-import com.example.products.entity.ProductDTO;
 import com.example.products.entity.ProductEntity;
 import com.example.products.repository.CategoryRepository;
 import com.example.products.repository.ProductRepository;
@@ -48,7 +47,9 @@ public class ProductService {
                                            String category,
                                            Float price_min,
                                            Float price_max,
-                                           String creation_date){
+                                           String creation_date,
+                                           int page,
+                                           int limit){
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<ProductEntity> query = criteriaBuilder.createQuery(ProductEntity.class);
         Root<ProductEntity> root = query.from(ProductEntity.class);
@@ -59,10 +60,12 @@ public class ProductService {
             return productRepository.findByNameAndCreatedAt(name,date);
         }
 
+        if (page <= 0) page = 1;
+
         List<Predicate> predicates = prepareQuery(name, category, price_min, price_max, criteriaBuilder, root);
         query.where(predicates.toArray(new Predicate[0]));
 
-        return entityManager.createQuery(query).getResultList();
+        return entityManager.createQuery(query).setFirstResult((page - 1) * limit).setMaxResults(limit).getResultList();
     }
 
     private List<Predicate> prepareQuery(String name,

@@ -16,7 +16,7 @@ public class ProductMediator {
     public ResponseEntity<?> getProducts(int page, int limit, String name, String category, Float price_min,
                                          Float price_max, String creation_date) {
         long totalCount = productService.countActiveProducts(name, category, price_min, price_max);
-        List<ProductEntity> product = productService.getProducts(name, category, price_min, price_max, creation_date);
+        List<ProductEntity> product = productService.getProducts(name, category, price_min, price_max, creation_date, page, limit);
         return ResponseEntity.ok().header("X-Total-Count",String.valueOf(totalCount)).body(product);
     }
 }

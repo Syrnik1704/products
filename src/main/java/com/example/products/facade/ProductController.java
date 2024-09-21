@@ -1,13 +1,12 @@
 package com.example.products.facade;
 
+import com.example.products.entity.ProductFormDTO;
+import com.example.products.entity.Response;
 import com.example.products.mediator.ProductMediator;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/api/v1/product")
@@ -28,5 +27,10 @@ public class ProductController {
                                  @RequestParam(required = false, defaultValue = "price") String _sort,
                                  @RequestParam(required = false, defaultValue = "asc") String _order) {
         return productMediator.getProducts(_page, _limit, name_like, _category, price_min, price_max, creation_date, _sort, _order);
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<Response> save(@RequestBody ProductFormDTO productFormDTO) {
+        return productMediator.saveProduct(productFormDTO);
     }
 }

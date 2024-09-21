@@ -7,12 +7,20 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +28,9 @@ public class ProductService {
 
     @PersistenceContext
     EntityManager entityManager;
+
+    @Value("${file-service.url}")
+    private String FILE_SERVICE;
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
@@ -104,6 +115,33 @@ public class ProductService {
             predicates.add(criteriaBuilder.lessThan(root.get("price"), price_max+0.01));
         }
         return predicates;
+    }
+
+    @Transactional
+    public void createProduct(ProductEntity product) {
+        if (product != null){
+            product.setCreatedAt(LocalDate.now());
+            product.setUid(UUID.randomUUID().toString());
+            product.setActive(true);
+            productRepository.save(product);
+            for (String uid : product.getImageUrls()) {
+                activateImage(uid);
+            }
+            return;
+        }
+        throw new RuntimeException();
+    }
+
+    private void activateImage(String uid) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(FILE_SERVICE + "?uid=" + uid))
+                .method("PATCH", HttpRequest.BodyPublishers.noBody())
+                .build();
+        try {
+            HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

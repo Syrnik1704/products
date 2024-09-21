@@ -8,7 +8,7 @@ import org.mapstruct.Mappings;
 @Mapper
 public abstract class CategoryToCategoryDTOMapper {
 
-    public CategoryDTO mapToCategoryDTO(Category category){
+    public CategoryDTO mapToCategoryDTO(Category category) {
         return  toCategoryDTO(category);
     }
 

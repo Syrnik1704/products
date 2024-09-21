@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -28,6 +29,10 @@ public class CategoryService {
             throw new ObjectExistInDBException("Category exist in DB with this name");
         });
         categoryRepository.save(category);
+    }
+
+    public Optional<Category> findCategoryByShortId(String shortID){
+        return categoryRepository.findByShortId(shortID);
     }
 
 }

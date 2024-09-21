@@ -11,14 +11,14 @@ import org.mapstruct.Mappings;
 @Mapper
 public abstract class ProductEntityToProductDTOMapper {
 
-    public ProductDTO mapToProductDTO(ProductEntity productEntity){
-        return toDTO(productEntity);
+    public ProductDTO mapToProductDTO(ProductEntity productEntity) {
+        return toProductDTO(productEntity);
     }
 
     @Mappings({
-            @Mapping(expression = "java(toCategoryDTO(productEntity.getCategory()))",target = "categoryDTO")
+            @Mapping(expression = "java(toCategoryDTO(productEntity.getCategory()))", target = "categoryDTO")
     })
-    protected abstract ProductDTO toDTO(ProductEntity productEntity);
+    protected abstract ProductDTO toProductDTO(ProductEntity productEntity);
 
     @Mappings({})
     protected abstract CategoryDTO toCategoryDTO(Category category);

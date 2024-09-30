@@ -79,7 +79,7 @@ public class ProductService {
             String column = switch (sort) {
                 case "name" -> "name";
                 case "category" -> "category";
-                case "creation_date" -> "created_at";
+                case "creation_date" -> "createdAt";
                 default -> "price";
             };
             Order orderQuery;
@@ -115,6 +115,7 @@ public class ProductService {
         if (price_max != null) {
             predicates.add(criteriaBuilder.lessThan(root.get("price"), price_max+0.01));
         }
+        predicates.add(criteriaBuilder.isTrue(root.get("active")));
         return predicates;
     }
 
@@ -159,9 +160,9 @@ public class ProductService {
         });
     }
 
-    private void deleteImages(String uuid){
+    private void deleteImages(String uid){
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.delete(FILE_SERVICE + "?uuid=" + uuid);
+        restTemplate.delete(FILE_SERVICE + "?uid=" + uid);
     }
 
 }

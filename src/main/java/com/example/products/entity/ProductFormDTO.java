@@ -11,10 +11,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ProductFormDTO {
     private String name;
-    private String mainDesc;
-    private String descHtml;
+    private String mainDescription;
+    private String htmlDescription;
     private float price;
-    private String[] imagesUuid;
+    private String[] imagesUid;
     private String parameters;
     private String category;
 }

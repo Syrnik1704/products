@@ -13,7 +13,7 @@ public abstract class ProductEntityToSimpleProductMapper {
     }
 
     @Mappings({
-            @Mapping(target = "imageUrl", expression = "java(getImageUrl(productEntity.getImageUrls()))")
+            @Mapping(target = "imageUrls", expression = "java(getImageUrl(productEntity.getImageUrls()))")
     })
     protected abstract SimpleProductDTO toSimpleProductDTO(ProductEntity productEntity);
 

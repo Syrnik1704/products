@@ -38,4 +38,9 @@ public class ProductController {
     public ResponseEntity<Response> delete(@RequestParam String uid) {
         return productMediator.deleteProduct(uid);
     }
+
+    @RequestMapping(value = "getExternal", method = RequestMethod.GET)
+    public ResponseEntity<?> getProduct(@RequestParam String uid) {
+        return productMediator.getProductExtend(uid);
+    }
 }
